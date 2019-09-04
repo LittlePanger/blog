@@ -1,0 +1,75 @@
+{% extends "cms/cms_base.html" %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <!-- 页眉 -->
+            <div class="page-header">
+                <h1>发布文章</h1>
+            </div>
+            <form action="" novalidate>
+                {% for foo in article_form %}
+
+                    <div class="form-group">
+                        <label for="{{ foo.id_for_label }}">{{ foo.label }}</label>
+                        {{ foo }}
+                    </div>
+                {% endfor %}
+                <button type="button" class="btn btn-primary" id="article_submit">提交</button>
+            </form>
+        </div>
+
+    </div>
+    <div class="col-md-3"></div>
+
+
+
+{% endblock %}
+
+</body>
+
+{% block script %}
+    <script>
+        $("#article_submit").click(function () {
+            var formdata = new FormData();
+            formdata.append("title", $("#article_title").val());
+            formdata.append("subtitle", $("#article_subtitle").val());
+            formdata.append("url", $("#article_url").val());
+            formdata.append("add_date", $("#article_add_date").val());
+            formdata.append("name", $("#article_name").val());
+            formdata.append("name_href", $("#article_name_href").val());
+            formdata.append("is_show", $("#article_is_show").prop("checked"));
+            formdata.append("csrfmiddlewaretoken", '{{ csrf_token }}');
+            formdata.append("content_img", $("#id_content_img")[0].files[0]);
+            formdata.append("file", $("#id_file")[0].files[0]);
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: formdata,        // 将添加好数据的formdata放到data这里
+                processData: false,    // 不处理数据
+                contentType: false,    // 不设置内容类型
+
+                success: function (data) {
+                    if (data.status === 200) {
+                        location.href = data.path
+                    } else {
+                        console.log(data.status);
+                    }
+
+                }
+            })
+        });
+
+    </script>
+{% endblock %}
+
+</html>

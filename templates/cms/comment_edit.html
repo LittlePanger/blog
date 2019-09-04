@@ -1,0 +1,72 @@
+{% extends "cms/cms_base.html" %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <!-- 页眉 -->
+            <div class="page-header">
+                <h1>添加留言</h1>
+            </div>
+            <form action="" novalidate>
+                {% for foo in comment_form %}
+                    <div class="form-group">
+                        <label for="{{ foo.id_for_label }}">{{ foo.label }}</label>
+                        {{ foo }}
+                    </div>
+                {% endfor %}
+                <button type="button" class="btn btn-primary" id="comment_submit">提交</button>
+            </form>
+        </div>
+
+    </div>
+    <div class="col-md-3"></div>
+
+
+
+{% endblock %}
+
+</body>
+
+{% block script %}
+    <script>
+        $("#comment_submit").click(function () {
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: {
+                    "username": $("#id_username").val(),
+                    "content": $("#id_content").val(),
+                    "date": $("#id_date").val(),
+                    "ua": $("#id_ua").val(),
+                    "system": $("#id_system").val(),
+                    "browser": $("#id_browser").val(),
+                    "ip": $("#id_ip").val(),
+                    "country": $("#id_country").val(),
+                    "city": $("#id_city").val(),
+                    "is_show": $("#id_is_show").prop("checked"),
+                    "csrfmiddlewaretoken": '{{ csrf_token }}',
+                },
+                success: function (data) {
+                    if (data.status === 200) {
+                        location.href = data.path
+                    } else {
+                        console.log(data.status);
+                    }
+
+                }
+            })
+        });
+
+    </script>
+{% endblock %}
+
+</html>

@@ -1,0 +1,76 @@
+
+    {% extends "blog/base.html" %}
+{% load static %}
+
+
+{% block css %}
+<link href="{% static 'css/md_default.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block page_header %}
+ <!-- Page Header -->
+  <header class="masthead" style="background-image: url({{ content_img.url }})">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>{{ title }}</h1>
+            <h2 class="subheading">{{ subtitle }}</h2>
+            <span class="meta">Posted by
+              <a href="{{ name_href }}">{{ name }}</a>
+              on {{ date }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+{% endblock %}
+
+{% block main_content %}
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto" style='font-family: "Roboto","Helvetica","Arial",sans-serif'>
+    <h1 id="_1">上线之前记得关调试模式</h1>
+<h2 id="index">index表</h2>
+<p>url -- 判断是哪个页面</p>
+<p>title -- 网页的title标签</p>
+<p>header_title -- header标题</p>
+<p>header_subtitle  -- header副标题</p>
+<p>header_img  -- header图片</p>
+<p>is_show是否展示</p>
+<h2 id="navigation">navigation 表</h2>
+<p>href -- 链接</p>
+<p>title -- 标题</p>
+<p>is_show是否展示</p>
+<h2 id="footer">footer 表</h2>
+<p>href -- 链接</p>
+<p>fa -- 图标</p>
+<p>is_show是否展示</p>
+<h2 id="article">Article表</h2>
+<p>title-- 标题</p>
+<p>subtitle-- 副标题</p>
+<p>file-- 存md路径</p>
+<p>url--链接</p>
+<p>date-- 日期,最后修改时间</p>
+<p>name--作者名</p>
+<p>name_href--作者链接</p>
+<p>content_img--文章封面</p>
+<p>is_show是否展示</p>
+<h2 id="comment">comment表</h2>
+<p>username -- 用户名</p>
+<p>content -- 内容</p>
+<p>date -- 时间</p>
+<p>ua -- 浏览器信息</p>
+<p>is_show是否展示</p>
+<p>可以加一个url,然后输入框多一个,如果填写了个人门户就添加个a标签</p>
+<h2 id="aboutmd">about页面使用md直接生成,然后覆盖</h2>
+<h2 id="rsagetpost">使用rsa加密,get的时候生成,发送给前端并保存成文件,然后post的时候在读文件验证</h2>
+<h2 id="_2">表格,点击添加多一行,然后提交</h2></div>
+      </div>
+    </div>
+  </article>
+{% endblock %}

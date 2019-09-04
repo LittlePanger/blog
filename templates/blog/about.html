@@ -1,0 +1,35 @@
+
+{% extends 'blog/base.html' %}
+
+
+{% block page_header %}
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url({{ header_img.url }})">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="page-heading">
+                        <h1>{{ header_title }}</h1>
+                        <span class="subheading">{{ header_subtitle }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+
+
+{% block main_content %}
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto" style='font-family: "Roboto","Helvetica","Arial",sans-serif'>
+    <h3 id="_1">爱好自黑</h3>
+<h3 id="etc">前世高低杠 今生ETC</h3>
+<h3 id="_2">反极端宗教 中医黑 反田园女拳 反云法官</h3>        </div>
+    </div>
+</div>
+
+{% endblock %}

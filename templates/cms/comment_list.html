@@ -1,0 +1,136 @@
+{% extends "cms/cms_base.html" %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+
+{% block content %}
+    <br>
+    <br>
+    <a href="{% url 'comment_edit' %}">
+        <button type="button" class="btn btn-info pull-right">添加</button>
+    </a>
+    <button id="show_submit" class="btn btn-info pull-left">批量通过审核</button>
+    <table class="table table-hover table-bordered">
+        <!--标题部分-->
+        <thead>
+        <tr>
+            <th><input type="checkbox" id="all-input"></th>
+            {% for foo in comment_thead %}
+                {% if foo == "User-Agent" %}
+                    <th width="200px">{{ foo }}</th>
+                {% else %}
+                    <th width="150px">{{ foo }}</th>
+                {% endif %}
+
+
+            {% endfor %}
+            <th>操作</th>
+        </tr>
+        </thead>
+        <!--内容部分-->
+        <tbody>
+        {% for comment in comment_obj %}
+            <tr>
+                <td><input type="checkbox" name="comment-input" id="{{ comment.id }}"></td>
+                <td>{{ comment.username }}</td>
+                <td>{{ comment.content }}</td>
+                <td>{{ comment.date|date:"Y-m-d" }}</td>
+                <td>{{ comment.ua }}</td>
+                <td>{{ comment.system }}</td>
+                <td>{{ comment.browser }}</td>
+                <td>{{ comment.ip }}</td>
+                <td>{{ comment.country }}</td>
+                <td>{{ comment.city }}</td>
+                <td>
+                    {% if comment.is_show %}
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'comment_edit' %}?id={{ comment.id }}">
+                        <button type="button" class="btn btn-primary">编辑</button>
+                    </a>
+                    <button type="button" class="btn btn-danger" name="{{ comment.id }}">删除</button>
+
+
+                </td>
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+
+{% endblock %}
+
+</body>
+
+{% block script %}
+    <script>
+        $(".btn-danger").click(function (event) {
+            {#console.log(event.target.id);#}
+            var thisE = $(event.currentTarget).parent().parent();//获取该行对象
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: {
+                    "opt":"delete",
+                    "id": event.target.name,
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+
+                },
+                success: function (data) {
+                    if (data.status === 200) {
+                        thisE.fadeOut();
+                    }
+                }
+            })
+        });
+
+        $("#all-input").change(function () {
+            var input_list = $('[name="comment-input"]');
+            for (var i = 0; i < input_list.length; i++) {
+                if ($(input_list[i]).prop("checked")) {
+                    $(input_list[i]).prop("checked", false)
+                } else {
+                    $(input_list[i]).prop("checked", true)
+                }
+            }
+        });
+
+    $("#show_submit").click(function () {
+        var id_list = [];
+        var checked_list = $('[name="comment-input"]:checked');
+            for (var i = 0; i < checked_list.length; i++) {
+                id_list.push($(checked_list[i]).prop("id"))
+            }
+        console.log(id_list);
+        $.ajax({
+                url: "",
+                type: "POST",
+                data: {
+                    "opt":"change",
+                    "id_list": id_list,
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                },
+                success: function (data) {
+                    if (data.status === 200) {
+                        location.reload()
+                    }
+                }
+            })
+    })
+
+
+    </script>
+{% endblock %}
+
+</html>

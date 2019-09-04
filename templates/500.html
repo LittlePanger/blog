@@ -1,0 +1,55 @@
+{% extends "blog/base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>404 NOT FOUND</title>
+
+</head>
+<body>
+
+
+{% block main_content %}
+
+    <p class=""><a href="/"><img src="{% static 'img/500.jpg' %}" style="max-width: 100%;height: auto;"
+                                       alt="Responsive image"></a></p>
+    <h4 style="text-align: center" id="time"></h4>
+    <p style="text-align: center">
+        <button type="button" class="btn btn-link" id="go_home">返回首页</button>
+        |
+        <button type="button" class="btn btn-link" id="go_back">返回上一页</button>
+    </p>
+
+{% endblock %}
+</body>
+
+{% block js %}
+    <script>
+        var int = setInterval("clock()", 1000);
+        var num = 5;
+
+        function clock() {
+
+            num > 0 ? num-- : clearInterval(int);
+            document.getElementById("time").innerHTML = num + "秒后返回上一页";
+        }
+
+
+        $("#go_home").click(function () {
+            location.href = "/"
+        });
+        $("#go_back").click(function () {
+            go()
+        });
+
+        function go() {
+            window.history.go(-1);
+        }
+
+        setTimeout("go()", 5000);
+
+
+    </script>
+{% endblock %}
+</html>

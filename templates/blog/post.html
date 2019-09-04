@@ -1,0 +1,65 @@
+{% extends 'blog/base.html' %}
+
+
+{% block page_header %}
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url({{ header_img.url }})">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="site-heading">
+                        <h1>{{ header_title }}</h1>
+                        <span class="subheading">{{ header_subtitle }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+
+
+{% block main_content %}
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                {% for article in articles %}
+                    <div class="post-preview">
+                        <a href="{{ article.url }}">
+                            <h2 class="post-title">
+                                {{ article.title }}
+                            </h2>
+                        </a>
+                        <p class="post-meta">Posted by
+                            <a href="/">{{ article.name }}</a>
+                            on {{ article.mod_date }}</p>
+                    </div>
+                    <hr>
+                {% endfor %}
+
+                <!-- Pager -->
+                <div id="pages" class="text-center">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="step-links">
+                                {% if articles.has_previous %}
+                                    <a class='active' href="?page={{ articles.previous_page_number }}">上一页</a>
+                                {% endif %}
+
+                                <span class="current">
+                    Page {{ articles.number }} of {{ articles.paginator.num_pages }}</span>
+
+                                {% if articles.has_next %}
+                                    <a class='active' href="?page={{ articles.next_page_number }}">下一页</a>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

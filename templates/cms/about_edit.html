@@ -1,0 +1,66 @@
+{% extends "cms/cms_base.html" %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <!-- 页眉 -->
+            <div class="page-header">
+                <h1>添加关于</h1>
+            </div>
+            <form action="" novalidate>
+                {% for foo in about_form %}
+                    <div class="form-group">
+                        <label for="{{ foo.id_for_label }}">{{ foo.label }}</label>
+                        {{ foo }}
+                    </div>
+                {% endfor %}
+                <button type="button" class="btn btn-primary" id="about_submit">提交</button>
+            </form>
+        </div>
+
+    </div>
+    <div class="col-md-3"></div>
+
+
+
+{% endblock %}
+
+</body>
+
+{% block script %}
+    <script>
+        $("#about_submit").click(function () {
+            var formdata = new FormData();
+            formdata.append("file", $("#id_file")[0].files[0]);
+            formdata.append("csrfmiddlewaretoken", '{{ csrf_token }}');
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: formdata,        // 将添加好数据的formdata放到data这里
+                processData: false,    // 不处理数据
+                contentType: false,    // 不设置内容类型
+
+                success: function (data) {
+                    if (data.status === 200) {
+                        location.href = data.path
+                    } else {
+                        console.log(data.status);
+                    }
+
+                }
+            })
+        });
+
+    </script>
+{% endblock %}
+
+</html>

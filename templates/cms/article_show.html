@@ -1,0 +1,95 @@
+{% extends "cms/cms_base.html" %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+
+{% block content %}
+    <br>
+    <br>
+    <a href="{% url 'article_edit' %}">
+        <button type="button" class="btn btn-info pull-right">添加</button>
+    </a>
+    <br>
+    <table class="table table-hover table-bordered">
+        <!--标题部分-->
+        <thead>
+        <tr>
+            {% for foo in content_thead %}
+                {% if foo != "链接" %}
+                <th width="200px">{{ foo }}</th>
+                {% endif %}
+
+
+            {% endfor %}
+            <th>操作</th>
+        </tr>
+        </thead>
+        <!--内容部分-->
+        <tbody>
+        {% for content in content_obj %}
+            <tr>
+                <td><a href="{{ content.url }}">{{ content.title }}</a></td>
+                <td>{{ content.subtitle }}</td>
+                <td>{{ content.file }}</td>
+                <td>{{ content.add_date.year }}-{{ content.add_date.month }}-{{ content.add_date.day }}</td>
+                <td>{{ content.mod_date.year }}-{{ content.mod_date.month }}-{{ content.mod_date.day }}</td>
+                <td>{{ content.name }}</td>
+                <td>{{ content.name_href }}</td>
+                <td><img src="{{ content.content_img.url }}" alt="" style="width: 100%"></td>
+                <td>
+                    {% if content.is_show %}
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'article_edit' %}?id={{ content.id }}">
+                        <button type="button" class="btn btn-primary">编辑</button>
+                    </a>
+                    <button type="button" class="btn btn-danger" name="{{ content.id }}">删除</button>
+
+
+                </td>
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+
+{% endblock %}
+
+</body>
+
+{% block script %}
+    <script>
+        $(".btn-danger").click(function (event) {
+            {#console.log(event.target.id);#}
+            var thisE = $(event.currentTarget).parent().parent();//获取该行对象
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: {
+                    "id": event.target.name,
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+
+                },
+                success: function (data) {
+                    if (data.status === 200) {
+                        thisE.fadeOut();
+                    }
+                }
+            })
+        })
+
+    </script>
+{% endblock %}
+
+</html>

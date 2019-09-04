@@ -1,0 +1,176 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+
+{% block page_header %}
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url({{ header_img.url }})">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="page-heading">
+                        <h1>{{ header_title }}</h1>
+                        <span class="subheading">{{ header_subtitle }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block main_content %}
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto"
+                 style="font-family: 'Merriweather Sans',Helvetica,Tahoma,Arial,'PingFang SC','Hiragino Sans GB','Microsoft Yahei','WenQuanYi Micro Hei',sans-serif;">
+                <p>Comments | {{ total }} 条留言</p>
+
+                <!-- 评论显示 -->
+                {% for comment in comments %}
+                    <div style="color: #FE9600;font-size: 15px;font-weight: 600">
+                        {{ comment.username }}
+                    </div>
+                    <div class="info" style="font-size: 12px;color:#9499a8;">
+                        <p style="margin: 0;">发布于&nbsp;{{ comment.date|date:'Y-m-d' }}&nbsp;(
+                            {% if "iOS" in comment.system %}
+                                <img src="/static/svg/iphone.svg" alt="" width="20px">
+                            {% elif "Mac" in comment.system %}
+                                <img src="/static/svg/iphone.svg" alt="" width="20px">
+                            {% else %}
+                                <img src="/static/svg/{{ comment.system }}.svg" alt="" width="20px">
+                            {% endif %}
+                            {{ comment.system }}&nbsp;&nbsp;
+                            {% if "Sogou" in comment.browser %}
+                                <img src="/static/svg/sogou.svg" alt="" width="20px">
+                            {% elif "Firefox" in comment.browser %}
+                                <img src="/static/svg/firefox.svg" alt="" width="20px">
+                            {% elif "QQ" in comment.browser %}
+                                <img src="/static/svg/QQBrowser.svg" alt="" width="20px">
+                            {% elif "Safari" in comment.browser %}
+                                <img src="/static/svg/safari.svg" alt="" width="20px">
+                            {% else %}
+                                <img src="/static/svg/Chrome.svg" alt="" width="20px">
+                            {% endif %}
+                            {{ comment.browser }})&nbsp;
+                            来自{{ comment.country }}
+                            {% if comment.city != "未知" %}
+                                {{ comment.city }}
+                            {% endif %}
+
+                        </p>
+                    </div>
+                    <p class="post-meta"
+                       style="color:#63686d;font-size: 14px;margin-top: 20px">{{ comment.content }}</p>
+                    {#                    <div class="post-preview"></div>#}
+                    <hr>
+
+
+
+                {% endfor %}
+                {#                    分页#}
+                <div id="pages" class="text-center">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="step-links">
+                                {% if comments.has_previous %}
+                                    <a class='active' href="?page={{ comments.previous_page_number }}">上一页</a>
+                                {% endif %}
+
+                                <span class="current">
+                    Page {{ comments.number }} of {{ comments.paginator.num_pages }}</span>
+
+                                {% if comments.has_next %}
+                                    <a class='active' href="?page={{ comments.next_page_number }}">下一页</a>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!-- 留言区 -->
+
+
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <label>昵称</label>
+                        <input type="text" class="form-control" placeholder="昵称" id="name">
+                        <p class="help-block text-danger" id="name_error"></p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <label>留言</label>
+                        <textarea rows="5" class="form-control" placeholder="留言" id="message"
+                                  style="background-image: url(/static/img/comment-bg.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    resize: vertical;"></textarea>
+                        <p class="help-block text-danger" id="content_error"></p>
+                    </div>
+                </div>
+
+
+                <br>
+                <div id="success"></div>
+                <p>留言会在审核后显示哦</p>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" id="send">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block js %}
+    <!-- Contact Form JavaScript -->
+    {#    <script src="{% static 'js/jqBootstrapValidation.js' %}"></script>#}
+    <script>
+        $("#send").click(function () {
+            var username = $("#name").val();
+            var message = $("#message").val();
+            if (username.length === 0 || username.length>15){
+                $("#name_error").text("昵称为1-15个字符哦");
+                return
+            }else{
+                $("#name_error").text("")
+            }
+
+            if (message.length === 0 || message.length>200){
+                $("#content_error").text("留言为1-200个字符哦");
+                return
+            }else{
+                $("#content_error").text("")
+            }
+
+            $.ajax({
+                url: "/blog/comment.html",
+                type: "POST",
+                data: {
+                    "username": $("#name").val(),
+                    "content": $("#message").val(),
+                    "ua": navigator.userAgent,
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                },
+                success: function (data) {
+                    if (data.status === 200) {
+                        location.href = data.path
+                    } else {
+                        console.log(data.status);
+                    }
+
+                }
+
+
+            })
+
+
+        })
+    </script>
+
+{% endblock %}
+

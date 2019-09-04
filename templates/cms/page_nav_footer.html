@@ -1,0 +1,144 @@
+{% extends "cms/cms_base.html" %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+
+{% block content %}
+    <br>
+    <br>
+    <a href="{% url 'page_edit' %}">
+        <button type="button" class="btn btn-info pull-right">添加</button>
+    </a>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="page-header">
+                <h1>导航</h1>
+            </div>
+            <table class="table table-hover table-bordered">
+                <!--标题部分-->
+                <thead>
+                <tr>
+                    {% for foo in nav_thead %}
+
+                        <th style="width: 250px">{{ foo }}</th>
+
+                    {% endfor %}
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <!--内容部分-->
+                <tbody>
+                {% for nav in nav_obj %}
+                    <tr>
+                        <td>{{ nav.href }}</td>
+                        <td>{{ nav.title }}</td>
+                        <td>
+                        {% if nav.is_show %}
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'page_edit' %}?opt=nav&id={{ nav.id }}">
+                                <button type="button" class="btn btn-primary">编辑</button>
+                            </a>
+                            <button type="button" class="btn btn-danger" name="nav_{{ nav.id }}">删除</button>
+
+
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <div class="page-header">
+                <h1>社交</h1>
+            </div>
+            <table class="table table-hover table-bordered">
+                <!--标题部分-->
+                <thead>
+                <tr>
+                    {% for foo in footer_thead %}
+
+                        <th style="width: 250px">{{ foo }}</th>
+
+                    {% endfor %}
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <!--内容部分-->
+                <tbody>
+                {% for footer in footer_obj %}
+                    <tr>
+                        <td>{{ footer.href }}</td>
+                        <td>{{ footer.fa }}</td>
+                        <td>
+                            {% if footer.is_show %}
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                            {% else %}
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'page_edit' %}?opt=footer&id={{ footer.id }}">
+                                <button type="button" class="btn btn-primary">编辑</button>
+                            </a>
+                            <button type="button" class="btn btn-danger" name="footer_{{ footer.id }}">删除</button>
+
+
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+
+</body>
+
+{% block script %}
+    <script>
+        $(".btn-danger").click(function (event) {
+            {#console.log(event.target.id);#}
+            var thisE = $(event.currentTarget).parent().parent();//获取该行对象
+            var name = event.target.name.split("_");
+            var opt = name[0];
+            var id = name[1];
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: {
+                    "opt": opt,
+                    "id": id,
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                },
+                success: function (data) {
+                    if (data.status === 200) {
+                        thisE.fadeOut();
+                    }
+                }
+            })
+        })
+
+    </script>
+{% endblock %}
+
+</html>
