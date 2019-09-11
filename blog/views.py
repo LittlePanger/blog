@@ -10,6 +10,8 @@ from djangoMyBlog.settings import AJAX_DATA
 
 from user_agents import parse
 
+from blog.AIComment import check_comment
+
 
 def get_context_dict(request, is_article=None):
     nav_obj = Navigation.objects.filter(is_show=True)
@@ -137,6 +139,8 @@ class CommentList(View):
             "content": data["content"],
             "ua": data["ua"],
         }
+        if check_comment(data["content"]) == 0:
+            dic.update({"is_show": True})
         ua_dict = self.analyze_ua(data["ua"])
         dic.update(ip_address_dict)
         dic.update(ua_dict)
