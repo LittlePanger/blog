@@ -109,13 +109,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -134,3 +135,25 @@ LOGIN_URL = '/cms/login'
 
 IMG_PATH = os.path.join(BASE_DIR, 'media', 'img')
 AJAX_DATA = {"status": 200, "path": None}
+
+"""
+# Static files (CSS, JavaScript, Images)
+
+STATIC_ROOT='/opt/static'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'statics'),
+]
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = '/opt/media'
+
+AUTH_USER_MODEL = "cms.UserInfo"
+LOGIN_URL = '/cms/login'
+
+IMG_PATH = '/opt/media/img'
+
+AJAX_DATA = {"status": 200, "path": None}
+
+"""
+

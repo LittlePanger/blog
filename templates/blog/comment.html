@@ -1,6 +1,8 @@
 {% extends "blog/base.html" %}
 {% load static %}
+{% block css %}
 
+{% endblock %}
 
 {% block page_header %}
     <!-- Page Header -->
@@ -117,7 +119,7 @@
                 <div id="success"></div>
                 <p>留言会在审核后显示哦</p>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary" id="send">Send</button>
+                    <button type="submit" class="btn btn-primary" id="send">发送</button>
                 </div>
             </div>
         </div>
@@ -129,32 +131,39 @@
 {% block js %}
     <!-- Contact Form JavaScript -->
     {#    <script src="{% static 'js/jqBootstrapValidation.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'js/input.js' %}"></script>
     <script>
         $("#send").click(function () {
             var username = $("#name").val();
             var message = $("#message").val();
-            if (username.length === 0 || username.length>15){
+            if (username.length === 0 || username.length > 15) {
                 $("#name_error").text("昵称为1-15个字符哦");
                 return
-            }else{
+            } else {
                 $("#name_error").text("")
             }
 
-            if (message.length === 0 || message.length>200){
+            if (message.length === 0 || message.length > 200) {
                 $("#content_error").text("留言为1-200个字符哦");
                 return
-            }else{
+            } else {
                 $("#content_error").text("")
             }
 
             $.ajax({
                 url: "/blog/comment.html",
                 type: "POST",
+                timeout: 5000,
                 data: {
                     "username": $("#name").val(),
                     "content": $("#message").val(),
                     "ua": navigator.userAgent,
                     "csrfmiddlewaretoken": "{{ csrf_token }}",
+                },
+                beforeSend: function () {
+                    // 禁用按钮防止重复提交
+                    $("#send").attr({disabled: "disabled"});
+                    $("#send").text("请稍等");
                 },
                 success: function (data) {
                     if (data.status === 200) {
@@ -163,13 +172,25 @@
                         console.log(data.status);
                     }
 
-                }
+                },
+                complete: function (XMLHttpRequest, status) {
+                    if (status == 'timeout') {//超时,status还有success,error等值的情况
+                        alert("超时");
+                        $("#send").removeAttr("disabled");
+                        $("#send").text("发送");
+                    }
+
+                },
 
 
             })
 
 
-        })
+        });
+
+        POWERMODE.colorful = true; // ture 为启用礼花特效
+        POWERMODE.shake = false; // false 为禁用震动特效
+        document.body.addEventListener('input', POWERMODE);
     </script>
 
 {% endblock %}
