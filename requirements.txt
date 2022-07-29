@@ -3,7 +3,7 @@ chardet==3.0.4
 Django==1.11
 idna==2.8
 Markdown==3.1.1
-mistune==0.8.4
+mistune==2.0.3
 Pillow==6.1.0
 pyasn1==0.4.6
 Pygments==2.4.2
